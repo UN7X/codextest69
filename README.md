@@ -7,6 +7,7 @@ A simple Flask-based file and text sharing service.
 - Registered users uploads up to 40 MB
 - Pastebin-like text sharing with editing
 - Admin dashboard to monitor users and files
+- Default admin login: `admin` / `root`
 - Rate limited endpoints
 
 ## Development

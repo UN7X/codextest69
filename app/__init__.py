@@ -16,3 +16,4 @@ limiter = Limiter(key_func=get_remote_address)
 limiter.init_app(app)
 
 from . import routes, models, paste, utils
+utils.init_defaults()

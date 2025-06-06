@@ -6,7 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 
 from . import app, db, limiter
-from .models import User, File
+from .models import User, File, Paste
 
 ALLOWED_EXTENSIONS = set(['txt', 'png', 'jpg', 'jpeg', 'gif', 'pdf'])
 
@@ -77,6 +77,7 @@ def upload():
     filename = secure_filename(file.filename)
     stored = f"{datetime.utcnow().timestamp()}_{filename}"
     path = os.path.join(app.config['UPLOAD_FOLDER'], stored)
+    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
     file.save(path)
     f = File(filename=filename, stored_name=stored)
     if current_user.is_authenticated:
@@ -129,6 +130,15 @@ def set_expiration(file_id):
         f.expire_at = datetime.fromisoformat(date)
         db.session.commit()
     return redirect(url_for('index'))
+
+
+@app.route('/pastes')
+def list_pastes():
+    if current_user.is_authenticated:
+        pastes = Paste.query.filter_by(user_id=current_user.id).all()
+    else:
+        pastes = Paste.query.filter_by(session_id=session.get('sid')).all()
+    return render_template('pastes.html', pastes=pastes)
 
 @app.route('/admin')
 @login_required
