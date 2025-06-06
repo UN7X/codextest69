@@ -1,0 +1,15 @@
+{% extends 'layout.html' %}
+{% block content %}
+<h2 class="title">Paste {{ paste.id }}</h2>
+<form method="post">
+  <div class="field">
+    <div class="control">
+      <textarea class="textarea" name="content" rows="10" style="font-family:monospace">{{ paste.content }}</textarea>
+    </div>
+  </div>
+  <button class="button is-link" type="submit">Update</button>
+</form>
+{% if current_user.is_authenticated %}
+<p><a class="button is-danger" href="{{ url_for('delete_paste', paste_id=paste.id) }}">Delete</a></p>
+{% endif %}
+{% endblock %}

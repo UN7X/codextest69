@@ -1,0 +1,19 @@
+{% extends 'layout.html' %}
+{% block content %}
+<h2 class="title">Admin Dashboard</h2>
+<p>Users: {{ users|length }}, Files: {{ files|length }}</p>
+<table class="table is-fullwidth">
+<tr><th>User</th><th>Admin</th></tr>
+{% for u in users %}
+<tr>
+<td>{{ u.username }}</td><td>{{ 'Yes' if u.is_admin else 'No' }}</td>
+</tr>
+{% endfor %}
+</table>
+<table class="table is-fullwidth">
+<tr><th>File</th><th>User</th></tr>
+{% for f in files %}
+<tr><td>{{ f.filename }}</td><td>{{ f.owner.username if f.owner else 'Guest' }}</td></tr>
+{% endfor %}
+</table>
+{% endblock %}

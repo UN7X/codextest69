@@ -1,0 +1,38 @@
+{% extends 'layout.html' %}
+{% block content %}
+<h1 class="title">Welcome{% if current_user.is_authenticated %}, {{ current_user.username }}{% endif %}</h1>
+
+{% if not current_user.is_authenticated %}
+<p><a href="{{ url_for('login') }}">Login</a> or <a href="{{ url_for('register') }}">Register</a></p>
+{% else %}
+<p><a href="{{ url_for('logout') }}">Logout</a>{% if current_user.is_admin %} | <a href="{{ url_for('admin') }}">Admin</a>{% endif %}</p>
+{% endif %}
+
+<form action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data">
+  <div class="field has-addons">
+    <div class="control"><input class="input" type="file" name="file"></div>
+    <div class="control"><button class="button is-link" type="submit">Upload</button></div>
+  </div>
+</form>
+
+<p><a href="{{ url_for('create_paste') }}">New Paste</a></p>
+
+<table class="table is-fullwidth">
+<tr><th>Name</th><th>Actions</th></tr>
+{% for f in files %}
+<tr>
+  <td><a href="{{ url_for('uploaded_file', name=f.stored_name) }}">{{ f.filename }}</a></td>
+  <td>
+    <form action="{{ url_for('rename_file', file_id=f.id) }}" method="post" style="display:inline">
+      <input name="name" class="input" placeholder="Rename" style="width:120px">
+    </form>
+    <form action="{{ url_for('set_expiration', file_id=f.id) }}" method="post" style="display:inline">
+      <input name="expire" class="input" type="date" style="width:120px">
+    </form>
+    <a class="button is-small is-danger" href="{{ url_for('delete_file', file_id=f.id) }}">Delete</a>
+  </td>
+</tr>
+{% endfor %}
+</table>
+
+{% endblock %}
